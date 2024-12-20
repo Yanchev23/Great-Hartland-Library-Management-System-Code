@@ -1,0 +1,138 @@
+# Pre-populated library collection as a list of dictionaries
+library_collection = [
+    {"title": "Learning Web Design", "author": "Jennifer Niederest Robbins", "isbn": "9781491960202", "available": True},
+    {"title": "Learn Python Programming", "author": "Fabrizio Romano", "isbn": "9781788996662", "available": True},
+    {"title": "Python In Easy Steps", "author": "Fabrizio Romano", "isbn": "9781840785968", "available": True},
+    {"title": "Python Web Development with Sanic", "author": "Adam Hopkins", "isbn": "9781801814416", "available": True},
+    {"title": "Advanced Python Programming", "author": "Quan Nguyen", "isbn": "9781801814010", "available": True},
+]
+
+# Function to add a book
+def add_book():
+    print("\n--- Add a Book ---")
+    title = input("Enter the title of the book: ").strip()
+    author = input("Enter the author's name: ").strip()
+    isbn = input("Enter the ISBN of the book: ").strip()
+
+    if not title or not author or not isbn:
+        print("Error: All fields are required!")
+        return
+
+    if not isbn.isdigit():
+        print("Error: ISBN must be numeric!")
+        return
+
+    for book in library_collection:
+        if book["isbn"] == isbn:
+            print("Error: A book with this ISBN already exists!")
+            return
+
+    library_collection.append({"title": title, "author": author, "isbn": isbn, "available": True})
+    print(f"Book '{title}' by {author} added successfully!")
+
+# Function to search for books
+def search_books():
+    print("\n--- Search Books ---")
+    search_criteria = input("Enter search criteria (Title, Author, or ISBN): ").strip().lower()
+
+    if not search_criteria:
+        print("Error: Search criteria cannot be empty!")
+        return
+
+    results = []
+    for book in library_collection:
+        if search_criteria in book["title"].lower() or search_criteria in book["author"].lower() or search_criteria in book["isbn"]:
+            results.append(book)
+
+    if not results:
+        print("No books found matching your criteria.")
+    else:
+        print("Search Results:")
+        for idx, book in enumerate(results, start=1):
+            print(f"{idx}. Title: {book['title']}, Author: {book['author']}, ISBN: {book['isbn']}, Available: {book['available']}")
+
+# Function to borrow a book
+def borrow_book():
+    print("\n--- Borrow a Book ---")
+    isbn = input("Enter the ISBN of the book to borrow: ").strip()
+
+    if not isbn.isdigit():
+        print("Error: Invalid ISBN! ISBN must be numeric.")
+        return
+
+    for book in library_collection:
+        if book["isbn"] == isbn:
+            if not book["available"]:
+                print(f"Book '{book['title']}' by {book['author']} is not available!")
+                return
+
+            book["available"] = False
+            print(f"Book '{book['title']}' by {book['author']} has been borrowed successfully!")
+            return
+
+    print("Error: Book with this ISBN does not exist!")
+
+# Function to return a book
+def return_book():
+    print("\n--- Return a Book ---")
+    isbn = input("Enter the ISBN of the book to return: ").strip()
+
+    if not isbn.isdigit():
+        print("Error: Invalid ISBN! ISBN must be numeric.")
+        return
+
+    for book in library_collection:
+        if book["isbn"] == isbn:
+            if book["available"]:
+                print(f"Book '{book['title']}' by {book['author']} is not borrowed!")
+                return
+
+            book["available"] = True
+            print(f"Book '{book['title']}' by {book['author']} has been returned successfully!")
+            return
+
+    print("Error: Book with this ISBN does not exist!")
+
+# Function to view available books
+def view_available_books():
+    print("\n--- View Available Books ---")
+    available_books = [book for book in library_collection if book["available"]]
+
+    if not available_books:
+        print("No books currently available!")
+    else:
+        print("Books Available:")
+        for idx, book in enumerate(available_books, start=1):
+            print(f"{idx}. Title: {book['title']}, Author: {book['author']}, ISBN: {book['isbn']}")
+
+# Main menu function
+def main_menu():
+    while True:
+        print("\n--- Great Hartland Community Library ---")
+        print("1. Add a Book")
+        print("2. Search Books")
+        print("3. Borrow a Book")
+        print("4. Return a Book")
+        print("5. View Available Books")
+        print("6. Exit")
+        choice = input("Enter your choice (1-6): ").strip()
+
+        if choice == "1":
+            add_book()
+        elif choice == "2":
+            search_books()
+        elif choice == "3":
+            borrow_book()
+        elif choice == "4":
+            return_book()
+        elif choice == "5":
+            view_available_books()
+        elif choice == "6":
+            print("Exiting the system. Goodbye!")
+            break
+        else:
+            print("Invalid choice! Please select a valid option.")
+
+# Run the program
+if __name__ == "__main__":
+    main_menu()
